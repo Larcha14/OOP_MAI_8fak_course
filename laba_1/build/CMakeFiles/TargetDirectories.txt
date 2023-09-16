@@ -1,0 +1,5 @@
+/home/arsenii/Documents/VS_code_prog/OOP/redy_laba/laba_1/build/CMakeFiles/laba_1.dir
+/home/arsenii/Documents/VS_code_prog/OOP/redy_laba/laba_1/build/CMakeFiles/test_zero.dir
+/home/arsenii/Documents/VS_code_prog/OOP/redy_laba/laba_1/build/CMakeFiles/test.dir
+/home/arsenii/Documents/VS_code_prog/OOP/redy_laba/laba_1/build/CMakeFiles/edit_cache.dir
+/home/arsenii/Documents/VS_code_prog/OOP/redy_laba/laba_1/build/CMakeFiles/rebuild_cache.dir

@@ -18,3 +18,10 @@ int gcd_1(int a, int b){
         return gcd(abs(b),abs(a));
     }
 }
+
+
+int gcd_2(double a1, double b1){
+    int a=int(a1);
+    int b=int(b1);
+    return gcd_1(a, b);
+}

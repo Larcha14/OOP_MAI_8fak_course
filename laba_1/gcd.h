@@ -6,4 +6,4 @@
 #include <string>
 #include <algorithm>
 
-int gcd_1(int a, int b);
+int gcd_2(double a, double b);
