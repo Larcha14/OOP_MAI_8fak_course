@@ -121,7 +121,7 @@ Hex::Hex(const Hex &other){
     _size=other._size;
     _array=new unsigned char[_size];
     for(int i=0; i<_size;++i){
-        _array[i]=other._array[other._size-1-i];
+        _array[i]=other._array[i];
     }
     this->create_without_zero();
 }
