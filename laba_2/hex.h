@@ -2,11 +2,24 @@
 #include <iostream>
 #include "vector.h"
 #include <string>
+#include <cstring>
+#include <exception>
 using namespace std;
 
 #define Radix_baze 16
 
 //H07A в массиве будет представляться как A70H!!!
+class input_error: public exception{
+    public:
+        input_error(const string& message): message{message}
+        {}
+        const char* what() const noexcept override{
+            return message.c_str();
+        }
+    private:
+        string message;
+
+};
 
 class Hex{
     public:
@@ -19,16 +32,19 @@ class Hex{
 
         // friend Hex operator++(Hex &h, int);
         // friend Hex& operator++(Hex &h);
-        // friend Hex operator--(Hex &h, int);
+        // friend Hex operator--(Hex &h, int);s
         // friend Hex& operator--(Hex &h);
 
         bool operator == (const Hex &h) const;
         bool operator > (const Hex &h);
         bool operator < (const Hex &h);
-        Hex operator+(const Hex &other);
-        Hex operator-(const Hex &other);
+        Hex &operator+(const Hex &other);
+        Hex &operator-(const Hex &other);
+        void create_without_zero();
         ostream &print(ostream &os); // при завершении очищает буфер
-        int len();
+        int size();
+        int real_leng();
+
 
         virtual ~Hex() noexcept;
     private:
@@ -36,8 +52,4 @@ class Hex{
         unsigned char *_array;
 
 };
-
-// inline int max_len(Hex &h1, Hex &h2){
-
-// }
 
