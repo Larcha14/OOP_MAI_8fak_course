@@ -41,6 +41,7 @@ class Hex{
         Hex &operator+(const Hex &other);
         Hex &operator-(const Hex &other);
         void create_without_zero();
+        string To_str();
         ostream &print(ostream &os); // при завершении очищает буфер
         int size();
         int real_leng();

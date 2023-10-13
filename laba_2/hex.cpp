@@ -7,6 +7,13 @@ int Hex::size(){
     return _size;
 }
 
+string Hex::To_str(){
+    string s(_size, '0');
+    for(int i=_size-1; i>=0;--i){
+        s[i]=_array[_size-1-i];
+    }
+    return s;
+}
 
 int max_len(Hex &h1, Hex &h2){
     return max(h1.size(), h2.size());
@@ -99,7 +106,8 @@ Hex::Hex(const initializer_list<unsigned char> &t){
         if(is_hex_elem(c)==0){
             throw input_error("Unacceptable value");
         }
-        _array[i--]=c;
+        _array[i-1]=c;
+        --i;
     }
     _size=t.size();
     this->create_without_zero();
@@ -291,28 +299,10 @@ Hex::~Hex() noexcept{
 
 // int main(){
 //     try{
-//         Hex numb("AA");
-//         // numb.print(cout);
-//         Hex numb_2("B");
-//         // cout<<(numb<numb_2);
-//         // cout<<numb.size()<<' '<<numb_2.size()<<' ';
-//         // bool a= (numb>numb_2);
-//         // bool b= (numb<numb_2);
-//         // numb.print(cout);
-//         cout<<'\n';
-//         // Hex sum(numb-numb_2);
-//         // cout<<sum.size();
-//         (numb-numb_2).print(cout);
-//         //    (numb+numb_2);
-//         // sum.print(cout);
+//         Hex h={'1', '2', 'A'};
+//         cout<<h.To_str()<<'\n';
+//         cout<<h.size();
 //     } catch(const input_error& err){
 //         cout<<"Error: "<< err.what()<<'\n';
 //     }
-//     // numb.print(cout);
-//     // int l= numb_2.size();
-//     // cout<<' '<<l<<' ';
-//     // (numb==numb_2).print(cout);
-//     // bool a= (numb>numb_2);
-//     // bool b= (numb<numb_2);
-//     // cout<<a<<' '<<b;
 // }
