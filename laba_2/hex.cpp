@@ -3,7 +3,7 @@
 // #include <exception>
 
 // 2 вариант 
-int Hex::size(){
+int Hex::size() const {
     return _size;
 }
 
@@ -53,7 +53,7 @@ bool is_hex_elem(char a){
     return true;
 }
 
-int Hex::real_leng(){
+int Hex::real_leng() const{
     int l=_size;
     for(int i=this->_size-1; i>0; i--){
         if(this->_array[i]!='0'){
@@ -82,8 +82,9 @@ void Hex::create_without_zero(){
 
 
 Hex::Hex() {
-    _size=0;
-    _array= NULL;
+    _size=1;
+    _array= new unsigned char[1];
+    _array[0]='0';
 }
 
 Hex::Hex(const size_t &n, unsigned char t){
@@ -154,7 +155,7 @@ bool Hex::operator ==(const Hex &h) const{
     return false;
 }
 
-bool Hex::operator>(const Hex &h){
+bool Hex::operator>(const Hex &h) const{
     if(this->_size>h._size){
         return true;
     }else if(this->_size==h._size){
@@ -178,7 +179,7 @@ bool Hex::operator>(const Hex &h){
 
 }
 
-bool Hex::operator<(const Hex &h){
+bool Hex::operator<(const Hex &h) const{
     if(this->_size<h._size){
         return true;
     }else if(this->_size==h._size){
@@ -281,7 +282,7 @@ Hex& Hex::operator-(const Hex &other){
 
 }
 
-ostream &Hex::print(ostream &os){
+ostream &Hex::print(ostream &os) const{
     for(int i=_size-1; i>=0;--i){
         os<<(_array[i]);
     }
@@ -299,9 +300,11 @@ Hex::~Hex() noexcept{
 
 // int main(){
 //     try{
-//         Hex h={'1', '2', 'A'};
-//         cout<<h.To_str()<<'\n';
-//         cout<<h.size();
+//         Hex h_2("0");
+//         Hex h;
+//         (h_2-h_2).print(cout)<<'\n';
+//         cout<<(h==h_2);
+
 //     } catch(const input_error& err){
 //         cout<<"Error: "<< err.what()<<'\n';
 //     }

@@ -36,18 +36,18 @@ class Hex{
         // friend Hex& operator--(Hex &h);
 
         bool operator == (const Hex &h) const;
-        bool operator > (const Hex &h);
-        bool operator < (const Hex &h);
+        bool operator > (const Hex &h) const;
+        bool operator < (const Hex &h) const;
         Hex &operator+(const Hex &other);
         Hex &operator-(const Hex &other);
         void create_without_zero();
         string To_str();
-        ostream &print(ostream &os); // при завершении очищает буфер
-        int size();
-        int real_leng();
+        ostream &print(ostream &os) const; 
+        int size() const ;
+        int real_leng() const ;
 
 
-        virtual ~Hex() noexcept;
+        ~Hex() noexcept;
     private:
         size_t _size;
         unsigned char *_array;

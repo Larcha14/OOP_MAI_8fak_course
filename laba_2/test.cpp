@@ -3,7 +3,7 @@
 
 TEST(test_1, constructor_test){
     Hex h;
-    ASSERT_TRUE(h.size()==0);
+    ASSERT_TRUE(h.size()==1);
 }
 
 TEST(test_2, constructor_test){
@@ -167,6 +167,78 @@ TEST(test_29, diff_test){
     Hex h("0");
     Hex h_2("0");
     ASSERT_TRUE(((h-h_2).To_str())=="0");
+}
+
+TEST(test_30, non_value_test){
+    Hex h;
+    Hex h_2;
+    ASSERT_TRUE(((h+h_2).To_str())=="0");
+}
+
+TEST(test_31, non_value_test){
+    Hex h;
+    Hex h_2;
+    ASSERT_TRUE(((h-h_2).To_str())=="0");
+}
+
+TEST(test_32, non_value_test){
+    Hex h;
+    Hex h_2;
+    ASSERT_TRUE((h==h_2)==1);
+}
+
+TEST(test_33, non_value_test){
+    Hex h;
+    Hex h_2;
+    ASSERT_TRUE((h>h_2)==0);
+}
+
+TEST(test_34, non_value_test){
+    Hex h;
+    Hex h_2;
+    ASSERT_TRUE((h<h_2)==0);
+}
+
+TEST(test_35, non_value_test){
+    Hex h;
+    Hex h_2("0");
+    ASSERT_TRUE((h==h_2)==1);
+}
+
+TEST(test_36, non_value_test){
+    Hex h;
+    Hex h_2("AAA");
+    ASSERT_TRUE((h==h_2)==0);
+}
+
+TEST(test_37, non_value_test){
+    Hex h;
+    Hex h_2("AAA");
+    ASSERT_TRUE((h>h_2)==0);
+}
+
+TEST(test_38, non_value_test){
+    Hex h;
+    Hex h_2("AAA");
+    ASSERT_TRUE((h<h_2)==1);
+}
+
+TEST(test_39, non_value_test){
+    Hex h;
+    Hex h_2("AAA");
+    ASSERT_TRUE(((h+h_2).To_str())=="AAA");
+}
+
+TEST(test_40, non_value_test){
+    Hex h;
+    Hex h_2("AAA");
+    ASSERT_TRUE(((h_2-h).To_str())=="AAA");
+}
+
+TEST(test_41, non_value_test){
+    Hex h;
+    Hex h_2("AAA");
+    ASSERT_THROW(Hex(h-h_2), input_error);
 }
 
 int main(int argc, char **argv){
