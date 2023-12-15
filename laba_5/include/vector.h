@@ -8,8 +8,9 @@ using namespace std;
 #define K 2
 
 // My_allocator::Allocator<T, BLOCK_SIZE>
+// template<class T, size_t BLOCK_SIZE, class ALLOCATOR = My_allocator::Allocator<T, BLOCK_SIZE>>
 
-template<class T, class ALLOCATOR>
+template<class T, class ALLOCATOR >
 class Myvector{
     public:
         class Iterator{
@@ -38,11 +39,21 @@ class Myvector{
                 Iterator next(Iterator &start, int s){
                     int cur_ind= start.idx;
                     for(int i=0;i<cur_ind+s;++i){
-                        *this++;
+                        ++start;
                     }
-                    return *this;
+                    return start;
 
                 }
+
+
+                // Iterator next(int s){
+                //     int cur_ind= this->idx;
+                //     for(int i=0;i<cur_ind+s;++i){
+                //         this++;
+                //     }
+                //     return *this;
+
+                // }
 
                 bool operator!=(const Iterator &other) const{
                     if(idx!=other.idx) return true;
@@ -62,8 +73,8 @@ class Myvector{
         };
     public:
         using Const_iterator = Iterator;
-        using allocator_type = ALLOCATOR;
-        using allocator_traits = allocator_traits<My_allocator::Allocator<T, 1024>>;
+        // using allocator_type = ALLOCATOR;
+        using Allocator_traits = allocator_traits<ALLOCATOR>;
 
         using difference_type = ptrdiff_t ; 
         using value_type = T;
@@ -71,12 +82,12 @@ class Myvector{
         using pointer = T*;
 
         Myvector(): _size(0), _capacity(0){
-            _array=allocator_traits::allocate(_allocator, 1);
+            _array=Allocator_traits::allocate(_allocator, 1);
         }
         Myvector(initializer_list<value_type> v){
             _size=v.size();
             _capacity=_size*K;
-            _array=allocator_traits::allocate(_allocator, _capacity);
+            _array=Allocator_traits::allocate(_allocator, _capacity);
             int i=0;
             for(const value_type &elem: v){
                 _array[i]=elem;
@@ -86,41 +97,41 @@ class Myvector{
         Myvector(size_t ln){
             _size=ln;
             _capacity=ln*K;
-            _array=allocator_traits::allocator.allocate(_size);
+            _array=Allocator_traits::allocate(_allocator, _size);
 
         }
         Myvector(size_t ln, value_type var){
             _size=ln;
             _capacity=ln;
-            _array=allocator_traits::allocator.allocate(_allocator, _capacity);
+            _array=Allocator_traits::allocate(_allocator, _capacity);
             for(int i=0; i<_size;++i){
                 _array[i]=var;
             }
         }
         Myvector(const Myvector &other){
-            this->resize(other.size());
-            for(int i=0; i<other.size(); ++i){
+            this->resize(other._size);
+            for(int i=0; i<other._size; ++i){
                 this->_array[i]=other._array[i];
             }
         }
-        Myvector(Myvector &&other):Myvector(other.size()){
+        Myvector(Myvector &&other):Myvector(other._size){
             *this=move(other);
             other=nullptr;
         }
         Myvector &operator=(const Myvector &other){
-            this->resize(other.size());
-            for(int i=0; i<other.size(); ++i){
+            this->resize(other._size);
+            for(int i=0; i<other._size; ++i){
                 this->_array[i]=other._array[i];
             }
             return *this;
         }
         Myvector &operator=(Myvector &&other) noexcept{
-            this->resize(other.size());
-            for(int i=0; i<other.size(); ++i){
+            this->resize(other._size);
+            for(int i=0; i<other._size; ++i){
                 this->_array[i]=other._array[i];
-                allocator_traits::destroy(_allocator, other._array+i);
+                Allocator_traits::destroy(_allocator, other._array+i);
             }
-            allocator_traits::deallocate(_allocator, other._array, other.size());
+            Allocator_traits::deallocate(_allocator, other._array, other._size);
             
             other._array=nullptr;
             return *this;
@@ -147,11 +158,19 @@ class Myvector{
         }
 
         reference front(){
-
+            if(_size>0){
+                return _array[0];
+            } else{
+                throw logic_error("_size of vector == 0 ");
+            }
         }
 
         reference back(){
-
+            if(_size>0){
+                return _array[_size-1];
+            } else{
+                throw logic_error("_size of vector == 0 ");
+            }
         }
 
         reference operator[](size_t pos){
@@ -166,7 +185,7 @@ class Myvector{
             if(n<=_capacity){
                 return;
             } else{
-                pointer new_arr= allocator_traits::allocate(_allocator, n);
+                pointer new_arr= Allocator_traits::allocate(_allocator, n);
                 _capacity=n+_capacity;
                 // _size=n;
 
@@ -198,8 +217,10 @@ class Myvector{
             } else{
                 if(_size>=_capacity){
                     resize(_size+1);
-                } 
-                for(int i=_size-1; i>pos.idx; i--){
+                } else{
+                    _size++;
+                }
+                for(int i=_size; i>pos.idx; i--){
                     _array[i]=_array[i-1];
                 }
                 _array[pos.idx]=val;
@@ -207,7 +228,7 @@ class Myvector{
             }
         }
 
-        void push_back(T& val){
+        void push_back(const T& val){
             if(_size>=_capacity){
                 reserve(_size+1);
             }
@@ -216,7 +237,11 @@ class Myvector{
         }
 
         ~Myvector(){
-            
+            Allocator_traits::deallocate(_allocator, _array, _capacity);
+            _size=0;
+            _capacity=0;
+            _array=nullptr;
+
         }
     private:
         int _size;
