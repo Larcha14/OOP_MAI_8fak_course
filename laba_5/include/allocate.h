@@ -2,23 +2,28 @@
 #include <iostream>
 #include <memory>
 #include <array>
+#include <map>
 using namespace std;
 
 #define N 8192
 #define CHUNK_SIZE 32
 
-//Для лучшей функциональности будем стараться вводить block_size=2^n
-//Также будем делить хранилище на блоки в 32 байта(ну я так захотел) и по запросу будем выделять такое количество блоков,
-//чтобы пометились данные пользователя
 
 namespace My_allocator{
     template<class T, size_t BLOCK_SIZE>
     class Allocator{
+        // typedef struct item{
+        //     bool used;
+        //     T* ptr;
+        // };
         private:
             size_t _free_idx;
             size_t _count_of_blocks=BLOCK_SIZE/CHUNK_SIZE;
-            array<T, BLOCK_SIZE> _used_blocks;
-            array<T*, BLOCK_SIZE> _free_blocks;
+            map<T*, bool> _used_blocks;
+            // array<item, BLOCK_SIZE> _used_blocks;
+            // item _used_blocks[BLOCK_SIZE];
+            array<T, BLOCK_SIZE> _free_blocks;
+            
             // array<T*, BLOCK_SIZE/CHUNK_SIZE> _free_blocks;
             // T* _free_blocks;
         public:
@@ -30,10 +35,14 @@ namespace My_allocator{
 
             Allocator(){
                 // _free_blocks= new value_type[max_count];
-                for(int i=0;i<BLOCK_SIZE; ++i){
-                    _free_blocks[i]=&_used_blocks[i];
-                }
+                // for(int i=0;i<BLOCK_SIZE; ++i){
+                //     item tmp;
+                //     tmp.used=false;
+                //     tmp.ptr=&_free_blocks[i];
+                //     _used_blocks[i]=tmp;
+                // }
                 _free_idx=0;
+                
             }
             
     #ifdef DEBUG
@@ -61,10 +70,14 @@ namespace My_allocator{
 //                     std::cout << "allocator: Allocate " << (max_count - _free_idx) << " of " << max_count << " Address:" << result << std::endl;
 // #endif
                 // }
+                
                 if (_free_idx +n < BLOCK_SIZE)
                 {
-                    result = (T *)_free_blocks[_free_idx];
+                    result = (T*)&_free_blocks[_free_idx];
                     _free_idx+=n;
+                    _used_blocks[result]=true;
+                    
+                    
 #ifdef DEBUG
                     std::cout << "allocator: Allocate " << (_count_of_blocks-_free_idx) << " of " << _count_of_blocks << " Address:" << result << std::endl;
 #endif
@@ -76,7 +89,7 @@ namespace My_allocator{
                 return result;
             }
             void deallocate(pointer point, size_t n){
-                if(_free_idx-n<0){
+                if(_free_idx-n<0 or _used_blocks[point]==false){
                     throw logic_error("allocator: Try to free zero-capacity");
                 } else{
 
@@ -85,7 +98,11 @@ namespace My_allocator{
     #ifdef DEBUG
                 cout << "allocator: Deallocate block "<<point << endl;
     #endif
-                _free_idx-=n;
+                    // for(int i=_free_idx-1; i>=_free_idx-n;--i){
+                    //     _used_blocks[i]=false;
+                    // }
+                    _used_blocks[point]=false;
+                    _free_idx-=n;
                 }
             
             }
